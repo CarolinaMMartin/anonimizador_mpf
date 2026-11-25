@@ -218,9 +218,7 @@ def main():
             == hashlib.sha256((ROOT / 'frontend' / name).read_bytes()).digest()
             for name in (
                 'app.js', 'styles.css',
-                'assets/ialab/logo_blanco_navy.png',
-                'assets/ialab/logo_azul.png',
-                'assets/ialab/isotype_azul.png',
+                'assets/mpf-verde.svg',
                 'assets/fonts/Roboto.ttf',
                 'assets/fonts/OFL.txt',
             )

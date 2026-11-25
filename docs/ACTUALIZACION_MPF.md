@@ -17,6 +17,20 @@ La actualización 3.4.8 incorpora las mejoras de detección y revisión del labo
 La lista de exclusiones admite selección manual cuando el contexto justifica ocultar una de esas expresiones.
 Un PDF escaneado requiere una capa de texto antes de analizarlo. El flujo de revisión y exportación está en el [manual de usuario](MANUAL_USUARIO.md).
 
+## Comparación con textos ficticios
+
+Las dos versiones analizaron los mismos nueve textos con el mismo entorno y la categoría Personas.
+En cinco ejemplos ambas devolvieron los nombres esperados. En los otros cuatro se observó:
+
+| Texto de prueba | Detecciones en 3.4.4 | Detecciones en 3.4.8 |
+|---|---|---|
+| los señores Gustavo Ríos, Mariela Paz, Hernán Luna | Gustavo Ríos · Mariela Paz, Hernán Luna | Gustavo Ríos · Mariela Paz · Hernán Luna |
+| Pérez, Juan y López, Ana comparecen. | Pérez, Juan y López, Ana | Pérez, Juan · López, Ana |
+| Imputado: Conexidad Subjetiva | Conexidad Subjetiva | Sin detección de persona |
+| Juan Pérez - Conexidad Subjetiva | Juan Pérez - Conexidad Subjetiva | Juan Pérez |
+
+Son casos de regresión seleccionados para verificar correcciones puntuales. Medir la precisión y la cobertura general requiere una muestra representativa y anotada.
+
 ## Entrega institucional
 
 1. **Piloto en Windows administrado.** Entregar el ZIP de prueba y su SHA-256 a Sistemas por el canal institucional. Usar documentos ficticios para validar un PDF mixto, acentos, la agrupación de nombres y la exportación. Registrar la versión de Windows y el resultado.
