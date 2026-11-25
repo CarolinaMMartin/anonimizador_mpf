@@ -37,11 +37,16 @@ jobs:
           echo "$GITHUB_WORKSPACE/.venv/Scripts" >> "$GITHUB_PATH"
       - name: Validate download metadata
         id: version
+        env:
+          PUBLISH_RELEASE: ${{ (github.event_name == 'workflow_dispatch' && inputs.publish) || (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publicar-version]')) }}
         shell: pwsh
         run: |
           $metadataJson = python -c "import json, sys; sys.path.insert(0, 'scripts'); from audit_repository import release_download_info; print(json.dumps(release_download_info()))"
           if ($LASTEXITCODE -ne 0) { throw 'Los enlaces de descarga no coinciden con la version del codigo.' }
           $metadata = $metadataJson | ConvertFrom-Json
+          if ($env:PUBLISH_RELEASE -eq 'true' -and $metadata.published_version) {
+            throw 'Actualizá la documentación de descarga a la versión que querés publicar.'
+          }
           "version=$($metadata.version)" >> $env:GITHUB_OUTPUT
           "asset_name=$($metadata.asset_name)" >> $env:GITHUB_OUTPUT
       - name: Install pinned dependencies and local model
@@ -69,6 +74,9 @@ jobs:
           python scripts/check_grouping.py --learned-alias-cases
           python scripts/check_document_parts.py
           python scripts/check_sensitive_portable.py
+          app_port=$(tr -d '\r\n' < dist/AnonimizadorJudicial-NLP/PUERTO_ACTUAL.txt)
+          python scripts/check_identity_flow.py --url "http://127.0.0.1:$app_port"
+          python scripts/check_identity_flow.py --caption-cases --url "http://127.0.0.1:$app_port"
       - name: Package reviewed source
         env:
           RELEASE_ASSET: ${{ steps.version.outputs.asset_name }}
@@ -76,9 +84,30 @@ jobs:
         run: |
           Set-Content dist/AnonimizadorJudicial-NLP/SOURCE_COMMIT.txt $env:GITHUB_SHA -Encoding ascii
           python scripts/package_release.py --output "dist/$env:RELEASE_ASSET"
+      - name: Verify final Windows ZIP with Microsoft Defender
+        env:
+          RELEASE_ASSET: ${{ steps.version.outputs.asset_name }}
+        shell: pwsh
+        run: |
+          $zip = "dist/$env:RELEASE_ASSET"
+          $expected = ((Get-Content -LiteralPath "$zip.sha256" -Raw).Trim() -split '\s+')[0]
+          ./scripts/check_release_defender.ps1 -Package $zip -ExpectedSHA256 $expected
+      - name: Verify extracted release ZIP
+        env:
+          RELEASE_ASSET: ${{ steps.version.outputs.asset_name }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        shell: pwsh
+        run: |
+          Expand-Archive -LiteralPath "dist/$env:RELEASE_ASSET" -DestinationPath build/validation/release-extracted
+          $package = "build/validation/release-extracted/AnonimizadorJudicial-NLP-$env:RELEASE_VERSION"
+          python scripts/check_windows_launcher.py --package $package --keep-running
+          if ($LASTEXITCODE -ne 0) { throw 'Fallo el inicio del ZIP extraido.' }
+          $appPort = Get-Content -LiteralPath "$package/PUERTO_ACTUAL.txt"
+          python scripts/portable_smoke.py --package $package --port $appPort --use-existing --category-cases --all-categories
+          if ($LASTEXITCODE -ne 0) { throw 'Fallo el analisis/exportacion del ZIP extraido.' }
       - uses: actions/upload-artifact@v4
         with:
-          name: anonimizador-windows-${{ steps.version.outputs.version }}
+          name: anonimizador-mpf-windows-${{ steps.version.outputs.version }}
           path: |
             dist/${{ steps.version.outputs.asset_name }}
             dist/${{ steps.version.outputs.asset_name }}.sha256
@@ -94,7 +123,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: anonimizador-windows-${{ needs.build.outputs.version }}
+          name: anonimizador-mpf-windows-${{ needs.build.outputs.version }}
           path: release-files
       - name: Create new release with verified files
         env:

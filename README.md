@@ -7,6 +7,12 @@ Es gratuita y trabaja en tu computadora, sin enviar tus documentos a Internet.
 
 ## Descargar para Windows — versión 3.4.4
 
+<!-- published-portable-version: 3.4.4 -->
+
+La rama de actualización prepara la **3.4.8** con la identidad visual del MPF.
+El siguiente enlace corresponde a la entrega pública vigente. Para la prueba
+institucional, consultá [la comparación y las opciones de entrega](docs/ACTUALIZACION_MPF.md).
+
 [**DESCARGAR PARA WINDOWS · 3.4.4**](https://github.com/CarolinaMMartin/anonimizador_mpf/releases/download/v3.4.4/AnonimizadorJudicial-3.4.4-Windows.zip)
 
 Para **Windows 10 y 11 de 64 bits**. Descargá el ZIP completo,

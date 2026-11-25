@@ -1,5 +1,14 @@
 # Cambios — Anonimizador Judicial
 
+## 3.4.8 · Actualización MPF en preparación
+
+- Mejora la detección de personas en enumeraciones y apellidos invertidos.
+- Conserva las decisiones de revisión al repetir el análisis con la misma configuración.
+- Advierte qué páginas de un PDF quedaron sin texto y pide confirmar antes de una exportación parcial.
+- Normaliza acentos y conserva letras latinas extendidas en PDF.
+- Agrega el buscador de detecciones y permite desanonimizar un grupo o un dato desde la vista previa.
+
+
 ## 3.4.4 — 6 de noviembre de 2026
 
 La [descarga vigente](https://github.com/CarolinaMMartin/anonimizador_mpf/releases/tag/v3.4.4)

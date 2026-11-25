@@ -1,4 +1,11 @@
-# Construcción y distribución — 3.4.4
+# Construcción y distribución del MPF
+
+La [actualización 3.4.8 para piloto](ACTUALIZACION_MPF.md) se construye desde
+su rama mediante el workflow *Build and verify portable (Windows)*. Ejecutalo
+sin marcar la opción de publicación y descargá el artefacto
+`anonimizador-mpf-windows-3.4.8`, que incluye el portable y su SHA-256.
+
+## Entrega pública 3.4.4
 
 La entrega 3.4.4 corresponde a Windows x64. Todavía no hay una entrega Mac de esta versión en `anonimizador_mpf`; debe compilarse y validarse en una Mac antes de publicarse.
 

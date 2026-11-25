@@ -1,6 +1,6 @@
 THIRD-PARTY SOFTWARE NOTICES
 Anonimizador Judicial — IALAB
-Version 3.4.4; runtime version also available as app_version in /health.
+Version 3.4.8; runtime version also available as app_version in /health.
 
 PRIMARY RUNTIME DEPENDENCIES
 Component                 Pinned version    License
@@ -59,3 +59,7 @@ Exported equivalence CSVs contain original personal values.
 
 Distribution guidance: docs/COMPLIANCE.md and docs/DEPLOY.md in the repository;
 COMPLIANCE.md and DEPLOY.md in the portable.
+
+LOCAL PDF FONT
+Roboto is bundled for PDF export under the SIL Open Font License 1.1.
+The original license is included at frontend/assets/fonts/OFL.txt.
