@@ -1,4 +1,4 @@
-# Licencias y privacidad — 3.4.4
+# Licencias y privacidad — 3.4.8
 
 Revisión técnica de la distribución: 6 de noviembre de 2026. Este documento describe los archivos incluidos y el funcionamiento; los términos aplicables están en las licencias originales.
 

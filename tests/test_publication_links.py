@@ -118,3 +118,17 @@ def test_metadata_uses_source_version_and_ignores_archived_reports(tmp_path):
     (tmp_path / 'app/config.py').write_text('APP_VERSION = "8.2.2"\n', encoding='utf-8')
     with pytest.raises(ValueError, match='Stale release version'):
         release_download_info(tmp_path)
+
+
+def test_candidate_keeps_last_published_links_and_builds_its_own_zip(tmp_path):
+    (tmp_path / 'app').mkdir()
+    (tmp_path / 'app/config.py').write_text('APP_VERSION = "8.2.2"\n', encoding='utf-8')
+    (tmp_path / 'README.md').write_text(
+        f'<!-- published-portable-version: {VERSION} -->\n' + documents()['README.md'],
+        encoding='utf-8',
+    )
+    info = release_download_info(tmp_path)
+    assert info['published_version'] == VERSION
+    assert info['download_url'] == URL
+    assert info['version'] == '8.2.2'
+    assert info['asset_name'] == 'AnonimizadorJudicial-8.2.2-Windows.zip'

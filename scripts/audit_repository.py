@@ -111,12 +111,22 @@ def release_download_info(root: Path = ROOT) -> dict[str, str]:
                        for target in node.targets))
     documents = {name: (root / name).read_text(encoding='utf-8')
                  for name in PUBLICATION_DOCUMENTS if (root / name).is_file()}
-    errors = check_publication_links(documents, version)
+    readme = documents.get('README.md', '')
+    published = re.search(r'^<!-- published-portable-version: ([0-9]+\.[0-9]+\.[0-9]+) -->$',
+                          readme, flags=re.MULTILINE)
+    published_version = published[1] if published else version
+    if published and tuple(map(int, published_version.split('.'))) > tuple(map(int, version.split('.'))):
+        raise ValueError('Published portable version cannot be newer than the source version')
+    errors = check_publication_links(documents, published_version)
     if errors:
         raise ValueError('\n'.join(errors))
     url, parts = _windows_downloads(documents['README.md'])[0]
-    return {'repository': PUBLIC_REPOSITORY, 'version': version,
+    info = {'repository': PUBLIC_REPOSITORY, 'version': version,
             'asset_name': parts[5], 'download_url': url}
+    if published_version != version:
+        info.update(published_version=published_version,
+                    asset_name=f'AnonimizadorJudicial-{version}-Windows.zip')
+    return info
 
 def audit():
     names = subprocess.check_output(

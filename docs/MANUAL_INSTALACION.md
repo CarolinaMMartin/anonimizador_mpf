@@ -1,4 +1,8 @@
-# Instalación — Anonimizador Judicial 3.4.4
+# Instalación — Anonimizador Judicial MPF
+
+La versión 3.4.8 está en prueba. Si recibiste el paquete del piloto, extraelo en una carpeta nueva, ejecutá **INICIAR.bat** y comprobá que la cabecera indique **v3.4.8**.
+
+## Descarga pública 3.4.4
 
 Aplicación portable de uso personal/académico. Esta entrega se verifica en
 **Windows 10/11 de 64 bits**. No requiere instalar Python ni conectarse a
